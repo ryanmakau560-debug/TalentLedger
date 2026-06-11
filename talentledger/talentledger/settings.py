@@ -57,10 +57,12 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'talentledger.urls'
 
+# talentledger/talentledger/settings.py
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'], # This is the critical line
+        'DIRS': [BASE_DIR.parent / 'templates'], 
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
