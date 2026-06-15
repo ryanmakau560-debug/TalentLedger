@@ -2,6 +2,21 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from .forms import SkillForm
+from .models import Skill
+from .models import Transaction
+
+def request_swap(request, skill_id):
+    # This is a simplified logic for now
+    skill = Skill.objects.get(id=skill_id)
+    if request.method == 'POST':
+        # Create a new transaction in the ledger
+        Transaction.objects.create(
+            sender=request.user,
+            skill=skill,
+            hours=request.POST.get('hours'),
+            status='Pending'
+        )
+        return redirect('marketplace')
 @csrf_exempt
 def test_postman(request):
     if request.method == 'GET':
@@ -21,3 +36,6 @@ def add_skill(request):
     else:
         form = SkillForm()
     return render(request, 'pages/add_skill.html', {'form': form})
+def marketplace(request):
+    skills = Skill.objects.all()
+    return render(request, 'pages/marketplace.html', {'skills': skills})
