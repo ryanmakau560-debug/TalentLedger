@@ -1,0 +1,7 @@
+<h2>My Dashboard</h2>
+<h3>My Requested Swaps</h3>
+<ul>
+    {% for swap in swaps %}
+        <li>{{ swap.skill.name }} - Status: {{ swap.status }}</li>
+    {% endfor %}
+</ul>
