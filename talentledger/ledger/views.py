@@ -4,7 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 from .forms import SkillForm
 from .models import Skill
 from .models import Transaction
-
+from django.contrib.auth.decorators import login_required
 def request_swap(request, skill_id):
     # This is a simplified logic for now
     skill = Skill.objects.get(id=skill_id)
@@ -18,6 +18,10 @@ def request_swap(request, skill_id):
         )
         return redirect('marketplace')
 @csrf_exempt
+def dashboard(request):
+    # This filters transactions to show only those involving the current user
+    user_swaps = Transaction.objects.filter(sender=request.user)
+    return render(request, 'pages/dashboard.html', {'swaps': user_swaps})
 def test_postman(request):
     if request.method == 'GET':
         return JsonResponse({"message": "Success! Django is talking to Postman."})
