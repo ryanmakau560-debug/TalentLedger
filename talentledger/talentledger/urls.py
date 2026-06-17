@@ -18,9 +18,11 @@ from django.contrib import admin
 from django.urls import path, include
 from ledger.views import profile_view
 from ledger.views import dashboard_view
+from django.views.generic import RedirectView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', RedirectView.as_view(url='dashboard/')),
     path('dashboard/', dashboard_view, name='dashboard'),
     path('accounts/', include('django.contrib.auth.urls')), 
     path('accounts/profile/', profile_view, name='profile'),
