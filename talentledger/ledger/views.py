@@ -7,6 +7,10 @@ from .models import Transaction
 from django.contrib.auth.decorators import login_required
 
 @login_required
+def dashboard_view(request):
+    user_skills = Skill.objects.filter(user=request.user) 
+    return render(request, 'pages/dashboard.html', {'skills': user_skills})
+@login_required
 def profile_view(request):
     return render(request, 'profile.html') # You'll need to create this template
 def request_swap(request, skill_id):
