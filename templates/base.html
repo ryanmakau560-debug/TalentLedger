@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>TalentLedger</title>
+</head>
+<body class="bg-gray-100">
+    <nav class="p-4 bg-white shadow-md">
+        <a href="{% url 'profile' %}" class="mr-4">Profile</a>
+        </nav>
+    <div class="p-6">
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>

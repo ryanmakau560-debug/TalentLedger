@@ -1,0 +1,9 @@
+{% extends 'pages/home.html' %} {% block content %}
+<h2>Share Your Skill</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Submit Skill</button>
+</form>
+<a href="{% url 'home' %}">Back to Home</a>
+{% endblock %}

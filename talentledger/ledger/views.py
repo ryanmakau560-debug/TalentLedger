@@ -5,6 +5,10 @@ from .forms import SkillForm
 from .models import Skill
 from .models import Transaction
 from django.contrib.auth.decorators import login_required
+
+@login_required
+def profile_view(request):
+    return render(request, 'profile.html') # You'll need to create this template
 def request_swap(request, skill_id):
     # This is a simplified logic for now
     skill = Skill.objects.get(id=skill_id)
