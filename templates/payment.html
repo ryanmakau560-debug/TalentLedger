@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-md mx-auto py-12 px-6">
+    <h1 class="text-3xl font-bold mb-6">Complete your {{ tier }} subscription</h1>
+    <form class="space-y-4">
+        <input type="text" placeholder="Card Number" class="w-full p-3 border rounded">
+        <div class="flex gap-4">
+            <input type="text" placeholder="MM/YY" class="w-1/2 p-3 border rounded">
+            <input type="text" placeholder="CVC" class="w-1/2 p-3 border rounded">
+        </div>
+        <button class="w-full bg-blue-600 text-white py-3 rounded-lg font-bold">
+            Pay Now
+        </button>
+    </form>
+</div>
+{% endblock %}

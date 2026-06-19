@@ -2,26 +2,43 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <script src="https://cdn.tailwindcss.com"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TalentLedger</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100">
-<nav class="bg-gray-800 p-4 text-white">
-    <div class="container mx-auto flex gap-4">
-        <a href="{% url 'dashboard' %}" class="hover:text-blue-300">Dashboard</a>
-
-        <div class="relative group">
-            <button class="hover:text-blue-300">Account ▼</button>
+<body class="bg-gray-100 min-h-screen">
+    <nav class="bg-blue-600 text-white p-4 shadow-md">
+        <div class="max-w-4xl mx-auto flex justify-between items-center">
+            <a href="{% url 'home' %}" class="text-xl font-bold">TalentLedger</a>
             
-            <div class="absolute left-0 mt-2 w-48 bg-white text-gray-800 rounded-lg shadow-xl hidden group-hover:block z-10">
-                <a href="{% url 'profile' %}" class="block px-4 py-2 hover:bg-gray-100">Profile</a>
-                <a href="{% url 'logout' %}" class="block px-4 py-2 hover:bg-red-100 text-red-600">Logout</a>
+            <div class="flex gap-4 items-center">
+                 <a href="{% url 'display' %}" class="hover:text-blue-200">Home</a>
+                
+                {% if user.is_authenticated %}
+                    <a href="{% url 'dashboard' %}" class="hover:text-blue-200">Dashboard</a>
+                    <a href="{% url 'skills' %}" class="text-white hover:text-blue-600">Skills Marketplace</a>
+                    <a href="{% url 'profile' %}" class="text-white hover:text-blue-600">Profile</a>
+                    
+                    <form action="{% url 'logout' %}" method="post" class="m-0">
+                        {% csrf_token %}
+                        <button type="submit" class="hover:text-blue-200">Logout</button>
+                    </form>
+                    
+                {% else %}
+                    <a href="{% url 'login' %}" class="hover:text-blue-200">Login</a>
+                    <a href="{% url 'register' %}" class="hover:text-blue-200">Sign Up</a>
+                {% endif %}
+               
+                <a href="{% url 'about' %}" class="text-white hover:text-blue-600">About Us</a>
+<a href="{% url 'subscription' %}" class="text-white hover:text-blue-600">Subscription</a>
             </div>
         </div>
-    </div>
-</nav>
-    <div class="container mx-auto p-6">
-        {% block content %}{% endblock %}
-    </div>
+    </nav>
+
+    <main class="container mx-auto p-6">
+        {% block content %}
+        {% endblock %}
+    </main>
+
 </body>
 </html>

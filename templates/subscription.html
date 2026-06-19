@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto py-12 px-6">
+    <h1 class="text-4xl font-bold text-center mb-12">Upgrade to Power User</h1>
+    
+    <div class="grid md:grid-cols-3 gap-8">
+        
+        <!-- Basic Tier -->
+        <div class="transition-transform duration-300 ease-in-out hover:scale-105 border rounded-lg p-8 shadow-lg text-center bg-white">
+            <h2 class="text-xl font-bold mb-4">Basic</h2>
+            <p class="text-4xl font-bold mb-6">$0</p>
+            <ul class="text-gray-600 mb-8 space-y-2">
+                <li>Standard Skill Matching</li>
+                <li>Ledger Access</li>
+                <li>1-on-1 Sessions</li>
+            </ul>
+        </div>
+
+        <!-- Power User Tier (Highlighted with hover scale) -->
+        <div class="transition-transform duration-300 ease-in-out hover:scale-105 border-4 border-blue-600 rounded-lg p-8 shadow-2xl text-center bg-blue-50">
+            <h2 class="text-2xl font-bold mb-4 text-blue-800">Power User</h2>
+            <p class="text-4xl font-bold mb-6">$9.99</p>
+            <ul class="text-gray-700 mb-8 space-y-2 font-semibold">
+                <li>Verified Badges</li>
+                <li>Advanced Search Filters</li>
+                <li>Host Group Sessions</li>
+            </ul>
+            <!-- Inside the 'Power User' card -->
+<a href="{% url 'payment' tier='PowerUser' %}" class="block bg-blue-600 text-white px-6 py-2 rounded-full mt-4">
+    Get Started
+</a>
+        </div>
+
+        <!-- Enterprise Tier -->
+        <div class="transition-transform duration-300 ease-in-out hover:scale-105 border rounded-lg p-8 shadow-lg text-center bg-white">
+            <h2 class="text-xl font-bold mb-4">Enterprise</h2>
+            <p class="text-4xl font-bold mb-6">$49</p>
+            <ul class="text-gray-600 mb-8 space-y-2">
+                <li>Everything in Power</li>
+                <li>API Access</li>
+                <li>Dedicated Support</li>
+            </ul>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

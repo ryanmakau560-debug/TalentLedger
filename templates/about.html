@@ -1,0 +1,35 @@
+<!-- about.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto py-12 px-6">
+    <h1 class="text-4xl font-bold text-gray-900 mb-6">About TalentLedger</h1>
+    
+    <div class="space-y-6 text-lg text-gray-700">
+        <p>
+            TalentLedger was founded to solve the lack of accountability in common skill exchange platforms[cite: 2]. 
+            We believe that knowledge should not be traded without a standardized measure of value[cite: 2].
+        </p>
+
+        <h2 class="text-2xl font-semibold text-gray-800">Our Solution: The Time-Bank</h2>
+        <p>
+            We have developed a robust Time-Bank platform where learning is tracked and valued[cite: 2]. 
+            In our system, teaching takes place via Discord calls, ensuring a personal and direct learning experience[cite: 2].
+        </p>
+
+        <div class="bg-blue-50 border-l-4 border-blue-600 p-6 rounded-r-lg">
+            <h3 class="font-bold text-blue-800 mb-2">How It Works</h3>
+            <ul class="list-disc list-inside space-y-2">
+                <li>After a session, the recipient rates the teacher to ensure quality[cite: 2].</li>
+                <li>Each hour taught earns the educator exactly 1 'Skill Credit'[cite: 2].</li>
+                <li>These credits can be seamlessly redeemed to learn new skills from others on the platform[cite: 2].</li>
+            </ul>
+        </div>
+
+        <p>
+            By integrating a dedicated ledger system for tracking contributions, we make learning progress transparent and verifiable[cite: 2]. 
+            TalentLedger is designed to be scalable and is built with a secure Django backend to support your growth[cite: 2].
+        </p>
+    </div>
+</div>
+{% endblock %}

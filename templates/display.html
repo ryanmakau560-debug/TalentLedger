@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-20 px-6 text-center">
+    <h1 class="text-5xl font-extrabold mb-4">TalentLedger</h1>
+    <p class="text-xl mb-8 max-w-2xl mx-auto">The decentralized marketplace where you trade skills, not just currency. Book sessions, earn credits, and grow.</p>
+    <div class="space-x-4">
+        <a href="{% url 'skills' %}" class="bg-white text-blue-600 px-8 py-3 rounded-full font-bold text-lg hover:bg-gray-100">Browse Skills</a>
+        <a href="{% url 'subscription' %}" class="border-2 border-white px-8 py-3 rounded-full font-bold text-lg hover:bg-blue-800">Upgrade Plan</a>
+    </div>
+</div>
+
+<div class="max-w-6xl mx-auto py-16 px-6 grid md:grid-cols-3 gap-8">
+    <div class="text-center p-6 border rounded-lg shadow-sm">
+        <h3 class="text-xl font-bold mb-2">Skill Marketplace</h3>
+        <p class="text-gray-600">Browse verified skill sessions from our community.</p>
+    </div>
+    <div class="text-center p-6 border rounded-lg shadow-sm">
+        <h3 class="text-xl font-bold mb-2">Earn Credits</h3>
+        <p class="text-gray-600">Share your expertise and earn credits for other lessons.</p>
+    </div>
+    <div class="text-center p-6 border rounded-lg shadow-sm">
+        <h3 class="text-xl font-bold mb-2">Secure Ledger</h3>
+        <p class="text-gray-600">Track all your transactions transparently.</p>
+    </div>
+</div>
+{% endblock %}

@@ -1,24 +1,22 @@
-# Talent Ledger
+# TalentLedger Backend
 
-Talent Ledger is a community-driven skill-swap platform that allows users to "bank" their skills and trade them for services. By utilizing a ledger system, the platform facilitates time-based exchanges, fostering a collaborative learning environment.
+A RESTful API built with Django and Django Rest Framework to manage talent skills and transactions.
 
-## Current Progress (Backend)
-- **Environment Setup:** Configured Django virtual environment and project structure.
-- **Data Modeling:** Implemented core models (`Skill`, `Transaction`) to track users, skills, and exchanges.
-- **Skill Management:** Added `ModelForm` functionality for users to contribute skills to the platform.
-- **Marketplace:** Built a functional marketplace view to browse and discover available skills.
-- **Transaction Logic:** Implemented backend logic for users to request swaps, with status tracking.
-- **API Testing:** Verified core functionality using Postman.
+## Features
+- **CRUD Operations**: Complete management of skills.
+- **RESTful API**: Clean JSON responses for seamless frontend integration.
+- **Data Integrity**: Relational database modeling with user-to-skill mapping.
 
-## Upcoming Roadmap
-- **Dashboard Refinement:** Finalizing the user dashboard to visualize active swap status.
-- **Authentication:** Enhancing user registration/login flows.
-- **Admin Management:** Utilizing Django Admin to manage and audit transactions.
-- **UI/UX Polish:** Adding basic styling and navigation for a seamless user experience.
-- **Final Testing:** Unit testing for core transaction logic to ensure robustness for Thursday's presentation.
+## Setup Instructions
+1. Clone the repository: `git clone <your-repo-url>`
+2. Create a virtual environment: `python -m venv venv`
+3. Activate it: `source venv/bin/activate` (or `venv\Scripts\activate` on Windows)
+4. Install dependencies: `pip install -r requirements.txt`
+5. Run migrations: `python manage.py migrate`
+6. Start the server: `python manage.py runserver`
 
-## Core Technologies
-- Python / Django (MVT Architecture)
-- SQLite Database
-- Git / GitHub for Version Control
-- Postman for API Verification
+## API Endpoints
+- `GET /api/skills/`: List all skills
+- `POST /api/skills/`: Create a new skill
+- `PUT /api/skills/<id>/`: Update a skill
+- `DELETE /api/skills/<id>/`: Delete a skill
