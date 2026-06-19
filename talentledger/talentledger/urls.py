@@ -16,14 +16,35 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from ledger.views import profile_view
-from ledger.views import dashboard_view
+from ledger.views import delete_skill_view, payment_view, profile_view, skill_api_list,skills_view
 from django.views.generic import RedirectView
+from django.contrib.auth import views as auth_views
+from ledger.views import dashboard_view, add_skill_view, delete_skill_view, register_view
+from ledger.views import display_view
+from ledger.views import about_view
+from ledger.views import subscription_view
+
 
 urlpatterns = [
+    path('', display_view, name='display'),
     path('admin/', admin.site.urls),
     path('', RedirectView.as_view(url='dashboard/')),
     path('dashboard/', dashboard_view, name='dashboard'),
     path('accounts/', include('django.contrib.auth.urls')), 
     path('accounts/profile/', profile_view, name='profile'),
+    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
+    path('add-skill/', add_skill_view, name='add_skill'),
+    path('delete-skill/<int:skill_id>/', delete_skill_view, name='delete_skill'),
+    path('register/', register_view, name='register'),
+    path('', display_view, name='home'),
+    path('dashboard/', dashboard_view, name='dashboard'),
+    path('about/', about_view, name='about'),
+    path('subscription/', subscription_view, name='subscription'),
+    path('payment/<str:tier>/', payment_view, name='payment'),
+    path('skills/', skills_view, name='skills'),
+    path('add-skill/', add_skill_view, name='add_skill'),
+    path('api/skills/', skill_api_list, name='skill-api'),
+    path('admin/', admin.site.urls),
+    path('', include('ledger.urls')),
+    
 ]
