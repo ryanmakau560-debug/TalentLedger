@@ -14,22 +14,18 @@
         <div class="border rounded-lg p-6 flex justify-between items-center shadow-sm hover:shadow-md transition">
             <div>
                 <h2 class="text-xl font-bold">{{ skill.name }}</h2>
-                <p class="text-gray-600">Instructor: 
-                    <span class="font-semibold text-gray-800">{{ skill.user.username }}</span>
-                </p>
-                <div class="mt-2 flex items-center">
-                    <span class="text-blue-600 font-bold bg-blue-50 px-3 py-1 rounded-full text-sm">
-                        {{ skill.credits }} Skill Credit(s)
-                    </span>
-                </div>
+                <p class="text-gray-600">Instructor: {{ skill.user.username }}</p>
             </div>
             
             {% if skill.user != request.user %}
-            <button class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition">
-                Book Session
-            </button>
+                <button class="book-btn text-white px-4 py-2 rounded-lg" 
+                        data-id="{{ skill.id }}" 
+                        onclick="toggleBooking(this)"
+                        style="background-color: {% if skill.id in booked_skill_ids %}green{% else %}blue{% endif %};">
+                    {% if skill.id in booked_skill_ids %}Booked{% else %}Book Session{% endif %}
+                </button>
             {% else %}
-            <span class="text-gray-400 italic text-sm">Your Listing</span>
+                <span class="text-gray-400 italic text-sm">Your Listing</span>
             {% endif %}
         </div>
         {% empty %}
@@ -37,4 +33,26 @@
         {% endfor %}
     </div>
 </div>
+
+<script>
+function toggleBooking(btn) {
+    const skillId = btn.getAttribute('data-id');
+    const csrfToken = document.cookie.split('; ').find(row => row.startsWith('csrftoken='))?.split('=')[1];
+
+    fetch(`/toggle-booking/${skillId}/`, { 
+    method: 'POST',
+    headers: { 'X-CSRFToken': csrfToken, 'Content-Type': 'application/json' }
+})
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'booked') {
+            btn.innerText = 'Booked';
+            btn.style.backgroundColor = 'green';
+        } else {
+            btn.innerText = 'Book Session';
+            btn.style.backgroundColor = 'blue';
+        }
+    });
+}
+</script>
 {% endblock %}

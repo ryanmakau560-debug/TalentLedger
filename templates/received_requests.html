@@ -1,0 +1,22 @@
+<h2>Booking Requests for Your Skills</h2>
+
+{% for request in requests %}
+    <div class="request-card">
+        <p><strong>Student:</strong> {{ request.student.username }}</p>
+        <p><strong>Skill:</strong> {{ request.skill.name }}</p>
+        <p><strong>Time:</strong> {{ request.start_time }}</p>
+        
+        <form action="{% url 'update_booking_status' request.id 'accept' %}" method="POST">
+            {% csrf_token %}
+            <button type="submit">Accept</button>
+        </form>
+
+        <form action="{% url 'update_booking_status' request.id 'reject' %}" method="POST">
+            {% csrf_token %}
+            <button type="submit">Reject</button>
+        </form>
+    </div>
+    <hr>
+{% empty %}
+    <p>No pending booking requests.</p>
+{% endfor %}

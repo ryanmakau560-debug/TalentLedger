@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto py-12 px-6">
+    <h1 class="text-3xl font-bold mb-8">My Dashboard</h1>
+
+    <h2 class="text-2xl font-semibold mb-4">My Booked Sessions</h2>
+    
+ <div class="grid gap-6">
+    {% for trans in my_transactions %}
+        <div class="border rounded-lg p-6 flex justify-between items-center shadow-sm">
+            <div>
+                <h2 class="text-xl font-bold">{{ trans.skill.name }}</h2>
+                <p class="text-gray-600">Instructor: {{ trans.skill.user.username }}</p>
+                <span class="text-yellow-600 text-sm font-bold">Status: {{ trans.status }}</span>
+            </div>
+            
+            <form method="POST" action="{% url 'toggle_booking' trans.skill.id %}">
+                {% csrf_token %}
+                <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">
+                    Cancel
+                </button>
+            </form>
+        </div>
+    {% empty %}
+        <p class="text-gray-500 text-center py-10">No sessions booked yet.</p>
+    {% endfor %}
+</div>
+    <h2 class="text-2xl font-semibold mt-10 mb-4">Your Skills</h2>
+    {% if skills %}
+        <ul class="space-y-4">
+            {% for skill in skills %}
+                <li class="border p-4 rounded">{{ skill.name }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="text-gray-500">You haven't added any skills yet.</p>
+    {% endif %}
+</div>
+{% endblock %}

@@ -16,13 +16,17 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from ledger.views import delete_skill_view, payment_view, profile_view, skill_api_list,skills_view
+from ledger.views import MyLoginView, delete_skill_view, payment_view, profile_view, skill_api_list,skills_view
 from django.views.generic import RedirectView
 from django.contrib.auth import views as auth_views
 from ledger.views import dashboard_view, add_skill_view, delete_skill_view, register_view
 from ledger.views import display_view
 from ledger.views import about_view
 from ledger.views import subscription_view
+from django.contrib.auth.views import LoginView
+from django.views.decorators.csrf import csrf_exempt
+from ledger import views
+
 
 
 urlpatterns = [
@@ -46,5 +50,7 @@ urlpatterns = [
     path('api/skills/', skill_api_list, name='skill-api'),
     path('admin/', admin.site.urls),
     path('', include('ledger.urls')),
+    path('accounts/login/', csrf_exempt(LoginView.as_view()), name='login'),
+    path('toggle-booking/<int:skill_id>/', views.toggle_book_session, name='toggle_booking'),
     
 ]
