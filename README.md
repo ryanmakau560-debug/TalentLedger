@@ -15,7 +15,7 @@ A RESTful API built with Django and Django Rest Framework to manage talent skill
 5. Run migrations: `python manage.py migrate`
 6. Start the server: `python manage.py runserver`
 
-## API Endpoints
+## Main API Endpoints
 - `GET /api/skills/`: List all skills
 - `POST /api/skills/`: Create a new skill
 - `PUT /api/skills/<id>/`: Update a skill
