@@ -31,6 +31,7 @@ from django.shortcuts import redirect
 
 
 @require_POST
+@csrf_exempt
 def toggle_book_session(request, skill_id):
     skill = get_object_or_404(Skill, id=skill_id)
     transaction = Transaction.objects.filter(sender=request.user, skill=skill).first()
@@ -61,8 +62,8 @@ def received_requests_view(request):
     # Get all transactions for skills owned by the current user
     requests = Transaction.objects.filter(skill__instructor=request.user, status='pending')
     return render(request, 'received_requests.html', {'requests': requests})
+@csrf_exempt
 def list_users(request):
-    # Get all users (or filter as needed)
     users = list(User.objects.values('id', 'username', 'email'))
     return JsonResponse({'users': users}, safe=False)
 
@@ -71,7 +72,7 @@ def list_users(request):
 @method_decorator(csrf_exempt, name='dispatch')
 class MyLoginView(LoginView):
     pass
-
+@csrf_exempt
 @api_view(['PUT', 'DELETE'])
 def skill_detail(request, pk):
     skill = get_object_or_404(Skill, pk=pk)
@@ -87,6 +88,7 @@ def skill_detail(request, pk):
         skill.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 @api_view(['GET', 'POST'])
+@csrf_exempt
 def skill_api_list(request):
     if request.method == 'GET':
         category = request.query_params.get('category', None)
@@ -139,6 +141,7 @@ def about_view(request):
     return render(request, 'about.html')
 
 @method_decorator(csrf_exempt, name='dispatch')
+@csrf_exempt
 def register_view(request):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST) 
@@ -212,6 +215,7 @@ from django.shortcuts import render
 def home(request):
 
     return render(request, 'pages/home.html')
+@csrf_exempt
 def add_skill(request):
     if request.method == 'POST':
         form = SkillForm(request.POST)
@@ -225,6 +229,7 @@ def marketplace(request):
     skills = Skill.objects.all()
     return render(request, 'pages/marketplace.html', {'skills': skills})
 
+@csrf_exempt
 def dashboard_view(request):
     user_skills = Skill.objects.filter(user=request.user)
     # Filter for transactions where the user is the sender
