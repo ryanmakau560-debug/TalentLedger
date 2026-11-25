@@ -19,7 +19,14 @@ class Session(models.Model):
     skill = models.ForeignKey(Skill, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"{self.title} - {self.user.username}"    
+        return f"{self.title} - {self.user.username}" 
+    
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+    study_credits = models.PositiveIntegerField(default=0)
+
+    def __str__(self):
+        return f"{self.user.username} ({self.study_credits} credits)"
 
 class Transaction(models.Model):
     # This refers to the standard, built-in Django User
@@ -28,7 +35,9 @@ class Transaction(models.Model):
     skill = models.ForeignKey(Skill, on_delete=models.CASCADE)
     hours = models.PositiveIntegerField()
     status = models.CharField(max_length=20, default='Pending')
+    scheduled_time = models.DateTimeField(null=True, blank=True)
     timestamp = models.DateTimeField(auto_now_add=True)
+    credit_awarded = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.sender} swapped {self.skill} with {self.receiver}"
