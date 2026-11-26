@@ -10,11 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 import os
-import dj_database_url
-
 from pathlib import Path
-
-
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -24,17 +21,18 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-qnatf)ai2np2sl&r1fe54g*a=3)op-z@&$qf-qnz+r#9e$k7&9'
+SECRET_KEY = os.environ.get(
+    'SECRET_KEY',
+    'django-insecure-qnatf)ai2np2sl&r1fe54g*a=3)op-z@&$qf-qnz+r#9e$k7&9',
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', 'True').lower() == 'true'
 
 ALLOWED_HOSTS = ['*']
 
 
 # Application definition
-
-# talentledger/settings.py
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -44,9 +42,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    
-    
-    
     'ledger',
 ]
 
@@ -62,12 +57,10 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'talentledger.urls'
 
-# talentledger/talentledger/settings.py
-
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR.parent / 'templates'], 
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -79,6 +72,7 @@ TEMPLATES = [
         },
     },
 ]
+
 WSGI_APPLICATION = 'talentledger.wsgi.application'
 
 
@@ -91,6 +85,7 @@ DATABASES = {
         conn_max_age=600,
     )
 }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
@@ -127,6 +122,15 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
-#AUTH_USER_MODEL = 'accounts.CustomUser'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# Auth & Session settings
+LOGIN_URL = '/accounts/login/'
+LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
+
+if not DEBUG:
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
                                 
