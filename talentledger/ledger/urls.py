@@ -17,4 +17,5 @@ urlpatterns = [
     path("marketplace/", views.marketplace, name="marketplace"),
     path("requests/", views.received_requests_view, name="received_requests"),
     path("book-session/<int:skill_id>/", views.toggle_book_session, name="book_session"),
+    path('contact/', views.contact_view, name='contact'),
 ]
