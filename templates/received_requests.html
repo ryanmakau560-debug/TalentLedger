@@ -10,10 +10,22 @@
 <div id="requests-list">
   <div class="card"><p class="muted" style="margin-bottom:0;">Loading incoming requests...</p></div>
 </div>
+
+<!-- Hidden token so JavaScript can read Django's CSRF security pass -->
+<form id="csrf-helper-form" style="display:none;">
+  {% csrf_token %}
+</form>
 {% endblock %}
 
 {% block extra_scripts %}
 <script>
+  function getCsrfToken() {
+    const input = document.querySelector("#csrf-helper-form input[name='csrfmiddlewaretoken']");
+    if (input && input.value) return input.value;
+    const match = document.cookie.match(/(?:^|;\s*)csrftoken=([^;]*)/);
+    return match ? decodeURIComponent(match[1]) : "";
+  }
+
   async function loadRequests() {
     const me = getCurrentUser();
     const container = document.getElementById("requests-list");
@@ -57,9 +69,12 @@
   }
 
   async function respondRequest(transactionId, action) {
+    const csrfToken = getCsrfToken();
+
     try {
       await apiRequest(`/api/transactions/${transactionId}/respond/`, {
         method: "POST",
+        headers: csrfToken ? { "X-CSRFToken": csrfToken } : {},
         body: JSON.stringify({ action }),
       });
       showMsg(`Request ${action === "accept" ? "accepted" : "declined"}!`);
