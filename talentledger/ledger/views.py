@@ -1,4 +1,4 @@
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth.views import LoginView
@@ -6,8 +6,6 @@ from django.db import transaction
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.dateparse import parse_datetime
-from django.utils.decorators import method_decorator
-from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from rest_framework import status
 from rest_framework import status as drf_status
@@ -287,6 +285,7 @@ def simple_login(request):
             status=status.HTTP_400_BAD_REQUEST,
         )
 
+    login(request, user)
     profile, _ = UserProfile.objects.get_or_create(user=user)
 
     return Response(

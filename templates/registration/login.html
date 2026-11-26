@@ -38,8 +38,13 @@
       const user = data.user || data;
       setCurrentUser(user);
       showMsg(`Logged in as ${user.username}! Redirecting...`);
+
+      const params = new URLSearchParams(window.location.search);
+      const nextUrl = params.get("next");
+      const destination = nextUrl && nextUrl.startsWith("/") ? nextUrl : "/dashboard/";
+
       setTimeout(() => {
-        window.location.href = "/dashboard/";
+        window.location.href = destination;
       }, 600);
     } catch (err) {
       showMsg(err.message, true);
