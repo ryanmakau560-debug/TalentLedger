@@ -6,7 +6,9 @@
   <h2>Welcome Back</h2>
   <p class="muted">Log in to manage your skills, credits, and bookings.</p>
 
-  <form id="login-form">
+  <form id="login-form" method="post">
+    {% csrf_token %}
+
     <label for="username">Username</label>
     <input id="username" type="text" required placeholder="e.g. demo_learner_01" />
 
@@ -24,14 +26,23 @@
 
 {% block extra_scripts %}
 <script>
+  function getCsrfToken() {
+    const input = document.querySelector("#login-form input[name='csrfmiddlewaretoken']");
+    if (input && input.value) return input.value;
+    const match = document.cookie.match(/(?:^|;\s*)csrftoken=([^;]*)/);
+    return match ? decodeURIComponent(match[1]) : "";
+  }
+
   document.getElementById("login-form").addEventListener("submit", async (e) => {
     e.preventDefault();
     const username = document.getElementById("username").value.trim();
     const password = document.getElementById("password").value;
+    const csrfToken = getCsrfToken();
 
     try {
       const data = await apiRequest("/api/auth/login/", {
         method: "POST",
+        headers: csrfToken ? { "X-CSRFToken": csrfToken } : {},
         body: JSON.stringify({ username, password }),
       });
 

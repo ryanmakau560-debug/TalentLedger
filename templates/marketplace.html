@@ -48,8 +48,23 @@
 
     grid.innerHTML = skills.map(skill => {
       const title = skill.title || skill.name || "Untitled Skill";
-      const ownerName = skill.owner_username || skill.user_username || (skill.user && skill.user.username) || `User #${skill.user || ""}`;
-      const isMine = me && (skill.user === me.id || ownerName === me.username);
+      const ownerName =
+        skill.instructor_username ||
+        skill.owner_username ||
+        skill.user_username ||
+        (skill.instructor && skill.instructor.username) ||
+        (skill.user && skill.user.username) ||
+        `User #${skill.instructor || skill.user || ""}`;
+      const discordHandle =
+        skill.discord_username ||
+        skill.instructor_discord ||
+        (skill.instructor && skill.instructor.discord_username) ||
+        "";
+      const isMine = me && (
+        skill.user === me.id ||
+        skill.instructor === me.id ||
+        ownerName === me.username
+      );
 
       return `
         <div class="card" style="display:flex; flex-direction:column; justify-content:space-between; margin-bottom:0;">
@@ -59,7 +74,10 @@
             <p class="muted" style="font-size:0.92rem;">${skill.description || "1-on-1 peer learning session."}</p>
           </div>
           <div>
-            <p class="muted" style="font-size:0.85rem; margin-bottom:0.75rem;">Instructor: <strong>@${ownerName}</strong></p>
+            <p class="muted" style="font-size:0.85rem; margin-bottom:0.35rem;">Instructor: <strong>@${ownerName}</strong></p>
+            <p class="muted" style="font-size:0.85rem; margin-bottom:0.75rem;">
+              Discord: <strong>${discordHandle ? discordHandle : "Not provided"}</strong>
+            </p>
             ${isMine
               ? `<span class="badge">Your Listing</span>`
               : `<button class="btn btn-sm" onclick="bookSkill(${skill.id})">Book Session (1 Credit)</button>`

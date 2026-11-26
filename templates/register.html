@@ -10,6 +10,9 @@
     <label for="username">Username</label>
     <input id="username" type="text" required placeholder="Choose a username" />
 
+    <label for="discord_username">Discord Username</label>
+    <input id="discord_username" type="text" required placeholder="e.g. rilex_4" />
+
     <label for="email">Email (optional)</label>
     <input id="email" type="email" placeholder="you@example.com" />
 
@@ -30,11 +33,12 @@
   document.getElementById("signup-form").addEventListener("submit", async (e) => {
     e.preventDefault();
     const username = document.getElementById("username").value.trim();
+    const discord_username = document.getElementById("discord_username").value.trim();
     const email = document.getElementById("email").value.trim();
     const password = document.getElementById("password").value;
 
     try {
-      const payload = { username, password };
+      const payload = { username, discord_username, password };
       if (email) payload.email = email;
 
       const data = await apiRequest("/api/auth/signup/", {
