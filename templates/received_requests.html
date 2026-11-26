@@ -1,22 +1,75 @@
-<h2>Booking Requests for Your Skills</h2>
+{% extends "base.html" %}
+{% block title %}Incoming Requests | TalentLedger{% endblock %}
 
-{% for request in requests %}
-    <div class="request-card">
-        <p><strong>Student:</strong> {{ request.student.username }}</p>
-        <p><strong>Skill:</strong> {{ request.skill.name }}</p>
-        <p><strong>Time:</strong> {{ request.start_time }}</p>
-        
-        <form action="{% url 'update_booking_status' request.id 'accept' %}" method="POST">
-            {% csrf_token %}
-            <button type="submit">Accept</button>
-        </form>
+{% block content %}
+<div class="card">
+  <h2>Incoming Booking Requests</h2>
+  <p class="muted">Approve or decline learners requesting sessions for your skills.</p>
+</div>
 
-        <form action="{% url 'update_booking_status' request.id 'reject' %}" method="POST">
-            {% csrf_token %}
-            <button type="submit">Reject</button>
-        </form>
-    </div>
-    <hr>
-{% empty %}
-    <p>No pending booking requests.</p>
-{% endfor %}
+<div id="requests-list">
+  <div class="card"><p class="muted" style="margin-bottom:0;">Loading incoming requests...</p></div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  async function loadRequests() {
+    const me = getCurrentUser();
+    const container = document.getElementById("requests-list");
+
+    if (!me) {
+      container.innerHTML = `<div class="card"><p class="muted" style="margin-bottom:0;">Please <a href="/accounts/login/" style="color:#a5b4fc;">log in</a> to manage incoming requests.</p></div>`;
+      return;
+    }
+
+    try {
+      const data = await apiRequest(`/api/instructor/requests/?user_id=${me.id}&username=${encodeURIComponent(me.username)}`);
+      const requests = Array.isArray(data) ? data : (data.results || []);
+
+      if (!requests.length) {
+        container.innerHTML = `<div class="card"><p class="muted" style="margin-bottom:0;">No incoming booking requests right now.</p></div>`;
+        return;
+      }
+
+      container.innerHTML = requests.map(req => {
+        const senderName = req.sender_username || req.learner_username || `User #${req.sender || ""}`;
+        const skillName = req.skill_title || req.skill_name || `Skill #${req.skill || ""}`;
+        const status = req.status || "pending";
+
+        return `
+          <div class="card" style="display:flex; justify-content:space-between; align-items:center; gap:1rem; flex-wrap:wrap;">
+            <div>
+              <h3>${skillName}</h3>
+              <p class="muted" style="margin-bottom:0.25rem;">Requested by <strong>@${senderName}</strong> · Hours: ${req.hours || 1}</p>
+              <span class="badge">Status: ${status}</span>
+            </div>
+            <div style="display:flex; gap:0.5rem;">
+              <button class="btn btn-sm" onclick="respondRequest(${req.id}, 'accept')">Accept</button>
+              <button class="btn btn-sm" style="background: var(--danger);" onclick="respondRequest(${req.id}, 'reject')">Decline</button>
+            </div>
+          </div>
+        `;
+      }).join("");
+    } catch (err) {
+      showMsg(err.message, true);
+    }
+  }
+
+  async function respondRequest(transactionId, action) {
+    try {
+      await apiRequest(`/api/transactions/${transactionId}/respond/`, {
+        method: "POST",
+        body: JSON.stringify({ action }),
+      });
+      showMsg(`Request ${action === "accept" ? "accepted" : "declined"}!`);
+      refreshUserCredits();
+      loadRequests();
+    } catch (err) {
+      showMsg(err.message, true);
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", loadRequests);
+</script>
+{% endblock %}

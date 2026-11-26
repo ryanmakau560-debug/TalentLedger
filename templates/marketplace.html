@@ -1,7 +1,94 @@
-<h2>Available Skills</h2>
-<ul>
-    {% for skill in skills %}
-        <li>{{ skill.name }} - {{ skill.category }}</li>
-    {% endfor %}
-</ul>
-<a href="{% url 'add_skill' %}">Add your own skill</a>
+{% extends "base.html" %}
+{% block title %}Marketplace | TalentLedger{% endblock %}
+
+{% block content %}
+<div class="card">
+  <h2>Skill Marketplace</h2>
+  <p class="muted">Browse available skills and book a 1-hour session using 1 study credit.</p>
+  <input id="search-input" type="text" placeholder="Search skills by title, category, or description..." oninput="filterSkills()" style="margin-bottom: 0;" />
+</div>
+
+<div id="skills-grid" class="grid">
+  <div class="card"><p class="muted" style="margin-bottom:0;">Loading skills...</p></div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  let allSkills = [];
+
+  async function loadSkills() {
+    try {
+      const data = await apiRequest("/api/skills/");
+      allSkills = Array.isArray(data) ? data : (data.results || []);
+      renderSkills(allSkills);
+    } catch (err) {
+      showMsg(err.message, true);
+    }
+  }
+
+  function filterSkills() {
+    const q = document.getElementById("search-input").value.trim().toLowerCase();
+    const filtered = allSkills.filter(s =>
+      (s.title || s.name || "").toLowerCase().includes(q) ||
+      (s.description || "").toLowerCase().includes(q) ||
+      (s.category || "").toLowerCase().includes(q)
+    );
+    renderSkills(filtered);
+  }
+
+  function renderSkills(skills) {
+    const grid = document.getElementById("skills-grid");
+    const me = getCurrentUser();
+
+    if (!skills.length) {
+      grid.innerHTML = `<div class="card"><p class="muted" style="margin-bottom:0;">No skills found yet. <a href="/add-skill/" style="color:#a5b4fc;">Add the first skill</a>.</p></div>`;
+      return;
+    }
+
+    grid.innerHTML = skills.map(skill => {
+      const title = skill.title || skill.name || "Untitled Skill";
+      const ownerName = skill.owner_username || skill.user_username || (skill.user && skill.user.username) || `User #${skill.user || ""}`;
+      const isMine = me && (skill.user === me.id || ownerName === me.username);
+
+      return `
+        <div class="card" style="display:flex; flex-direction:column; justify-content:space-between; margin-bottom:0;">
+          <div>
+            <span class="badge" style="display:inline-block; margin-bottom:0.75rem;">${skill.category || "Skill Swap"}</span>
+            <h3>${title}</h3>
+            <p class="muted" style="font-size:0.92rem;">${skill.description || "1-on-1 peer learning session."}</p>
+          </div>
+          <div>
+            <p class="muted" style="font-size:0.85rem; margin-bottom:0.75rem;">Instructor: <strong>@${ownerName}</strong></p>
+            ${isMine
+              ? `<span class="badge">Your Listing</span>`
+              : `<button class="btn btn-sm" onclick="bookSkill(${skill.id})">Book Session (1 Credit)</button>`
+            }
+          </div>
+        </div>
+      `;
+    }).join("");
+  }
+
+  async function bookSkill(skillId) {
+    const me = getCurrentUser();
+    if (!me) {
+      showMsg("Please log in first to book a session.", true);
+      return;
+    }
+
+    try {
+      await apiRequest(`/api/skills/${skillId}/book/`, {
+        method: "POST",
+        body: JSON.stringify({ sender: me.id, user_id: me.id, hours: 1 }),
+      });
+      showMsg("Session requested! Check your Dashboard for status updates.");
+      refreshUserCredits();
+    } catch (err) {
+      showMsg(err.message, true);
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", loadSkills);
+</script>
+{% endblock %}

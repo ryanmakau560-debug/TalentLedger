@@ -1,44 +1,206 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TalentLedger</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}TalentLedger{% endblock %}</title>
+  <style>
+    :root {
+      --bg: #0b0f19;
+      --panel: rgba(20, 27, 45, 0.85);
+      --border: rgba(255, 255, 255, 0.1);
+      --text: #f1f5f9;
+      --muted: #94a3b8;
+      --accent: #6366f1;
+      --accent-hover: #4f46e5;
+      --success: #22c55e;
+      --danger: #ef4444;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
+    body {
+      background: radial-gradient(circle at top right, #1e1b4b, var(--bg) 55%);
+      color: var(--text);
+      min-height: 100vh;
+    }
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      background: rgba(11, 15, 25, 0.8);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .brand { font-weight: 700; font-size: 1.2rem; color: #fff; text-decoration: none; }
+    .nav-links { display: flex; gap: 1.25rem; align-items: center; flex-wrap: wrap; }
+    .nav-links a, .nav-links button {
+      color: var(--muted);
+      text-decoration: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 0.95rem;
+    }
+    .nav-links a:hover, .nav-links button:hover { color: #fff; }
+    .badge {
+      background: rgba(99, 102, 241, 0.2);
+      border: 1px solid rgba(99, 102, 241, 0.5);
+      color: #c7d2fe;
+      padding: 0.3rem 0.7rem;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+    .container { max-width: 1100px; margin: 2rem auto; padding: 0 1.25rem; }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.5rem;
+      backdrop-filter: blur(10px);
+      margin-bottom: 1.25rem;
+    }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.25rem; }
+    h1, h2, h3 { margin-bottom: 0.75rem; }
+    p.muted { color: var(--muted); margin-bottom: 1rem; }
+    label { display: block; margin-bottom: 0.35rem; font-size: 0.9rem; color: #cbd5e1; }
+    input, select {
+      width: 100%;
+      padding: 0.65rem 0.8rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.9);
+      color: #fff;
+      margin-bottom: 1rem;
+    }
+    .btn {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      padding: 0.65rem 1.1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .btn:hover { background: var(--accent-hover); }
+    .btn-sm { padding: 0.45rem 0.8rem; font-size: 0.85rem; }
+    .msg { padding: 0.75rem 1rem; border-radius: 8px; margin-bottom: 1rem; display: none; }
+    .msg.ok { display: block; background: rgba(34, 197, 94, 0.15); border: 1px solid var(--success); color: #86efac; }
+    .msg.err { display: block; background: rgba(239, 68, 68, 0.15); border: 1px solid var(--danger); color: #fca5a5; }
+  </style>
+  {% block extra_head %}{% endblock %}
 </head>
-<body class="bg-gray-100 min-h-screen">
-    <nav class="bg-blue-600 text-white p-4 shadow-md">
-        <div class="max-w-4xl mx-auto flex justify-between items-center">
-            <a href="{% url 'home' %}" class="text-xl font-bold">TalentLedger</a>
-            
-            <div class="flex gap-4 items-center">
-                 <a href="{% url 'display' %}" class="hover:text-blue-200">Home</a>
-                
-                {% if user.is_authenticated %}
-                    <a href="{% url 'dashboard' %}" class="hover:text-blue-200">Dashboard</a>
-                    <a href="{% url 'skills' %}" class="text-white hover:text-blue-600">Skills Marketplace</a>
-                    <a href="{% url 'profile' %}" class="text-white hover:text-blue-600">Profile</a>
-                    
-                    <form action="{% url 'logout' %}" method="post" class="m-0">
-                        {% csrf_token %}
-                        <button type="submit" class="hover:text-blue-200">Logout</button>
-                    </form>
-                    
-                {% else %}
-                    <a href="{% url 'login' %}" class="hover:text-blue-200">Login</a>
-                    <a href="{% url 'register' %}" class="hover:text-blue-200">Sign Up</a>
-                {% endif %}
-               
-                <a href="{% url 'about' %}" class="text-white hover:text-blue-600">About Us</a>
-<a href="{% url 'subscription' %}" class="text-white hover:text-blue-600">Subscription</a>
-            </div>
-        </div>
-    </nav>
+<body>
+  <nav>
+    <a class="brand" href="/dashboard/">TalentLedger</a>
+    <div class="nav-links">
+      <a href="/marketplace/">Marketplace</a>
+      <a href="/add-skill/">Add Skill</a>
+      <a href="/requests/">Requests</a>
+      <a href="/dashboard/">Dashboard</a>
+      <span id="nav-credits" class="badge">Credits: --</span>
+      <span id="nav-user" style="color:#e2e8f0; font-size:0.9rem;"></span>
+      <a id="nav-login" href="/accounts/login/">Login</a>
+      <button id="nav-logout" onclick="logoutUser()" style="display:none;">Logout</button>
+    </div>
+  </nav>
 
-    <main class="container mx-auto p-6">
-        {% block content %}
-        {% endblock %}
-    </main>
+  <main class="container">
+    <div id="global-msg" class="msg"></div>
+    {% block content %}{% endblock %}
+  </main>
 
+  <script>
+    const API_BASE = "https://talentledgerproject.onrender.com";
+
+    function getCurrentUser() {
+      const raw = localStorage.getItem("tl_user");
+      return raw ? JSON.parse(raw) : null;
+    }
+
+    function setCurrentUser(user) {
+      if (user) {
+        localStorage.setItem("tl_user", JSON.stringify(user));
+      } else {
+        localStorage.removeItem("tl_user");
+      }
+      renderNavAuth();
+    }
+
+    function logoutUser() {
+      setCurrentUser(null);
+      window.location.href = "/accounts/login/";
+    }
+
+    function showMsg(text, isError = false) {
+      const el = document.getElementById("global-msg");
+      if (!el) return;
+      el.textContent = text;
+      el.className = "msg " + (isError ? "err" : "ok");
+    }
+
+    async function apiRequest(path, options = {}) {
+      const headers = Object.assign({ "Content-Type": "application/json" }, options.headers || {});
+      const res = await fetch(`${API_BASE}${path}`, Object.assign({}, options, { headers }));
+      let data = null;
+      try {
+        data = await res.json();
+      } catch (_) {
+        data = null;
+      }
+      if (!res.ok) {
+        const errMsg = (data && (data.detail || data.error || JSON.stringify(data))) || `Request failed (${res.status})`;
+        throw new Error(errMsg);
+      }
+      return data;
+    }
+
+    async function refreshUserCredits() {
+      const user = getCurrentUser();
+      const creditsEl = document.getElementById("nav-credits");
+      if (!user || !creditsEl) return;
+      try {
+        const users = await apiRequest("/api/users/");
+        const list = Array.isArray(users) ? users : (users.results || []);
+        const found = list.find(u => u.id === user.id || u.username === user.username);
+        if (found) {
+          const updated = Object.assign({}, user, found);
+          localStorage.setItem("tl_user", JSON.stringify(updated));
+          creditsEl.textContent = `Credits: ${updated.study_credits ?? 0}`;
+        }
+      } catch (_) {
+        creditsEl.textContent = `Credits: ${user.study_credits ?? 0}`;
+      }
+    }
+
+    function renderNavAuth() {
+      const user = getCurrentUser();
+      const userEl = document.getElementById("nav-user");
+      const loginEl = document.getElementById("nav-login");
+      const logoutEl = document.getElementById("nav-logout");
+      const creditsEl = document.getElementById("nav-credits");
+
+      if (user) {
+        userEl.textContent = `@${user.username}`;
+        loginEl.style.display = "none";
+        logoutEl.style.display = "inline-block";
+        creditsEl.textContent = `Credits: ${user.study_credits ?? 0}`;
+        refreshUserCredits();
+      } else {
+        userEl.textContent = "";
+        loginEl.style.display = "inline-block";
+        logoutEl.style.display = "none";
+        creditsEl.textContent = "Credits: 0";
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", renderNavAuth);
+  </script>
+  {% block extra_scripts %}{% endblock %}
 </body>
 </html>

@@ -1,40 +1,118 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+{% block title %}Dashboard | TalentLedger{% endblock %}
 
 {% block content %}
-<div class="max-w-4xl mx-auto py-12 px-6">
-    <h1 class="text-3xl font-bold mb-8">My Dashboard</h1>
+<div class="card">
+  <h2 id="dash-welcome">Your Dashboard</h2>
+  <p class="muted" id="dash-subtitle">Track your study credits, offered skills, and booked sessions.</p>
+  <div style="display:flex; gap:0.75rem; flex-wrap:wrap;">
+    <a class="btn btn-sm" href="/marketplace/">Browse Marketplace</a>
+    <a class="btn btn-sm" href="/add-skill/">+ Add Skill</a>
+    <a class="btn btn-sm" href="/requests/">View Incoming Requests</a>
+  </div>
+</div>
 
-    <h2 class="text-2xl font-semibold mb-4">My Booked Sessions</h2>
-    
- <div class="grid gap-6">
-    {% for trans in my_transactions %}
-        <div class="border rounded-lg p-6 flex justify-between items-center shadow-sm">
-            <div>
-                <h2 class="text-xl font-bold">{{ trans.skill.name }}</h2>
-                <p class="text-gray-600">Instructor: {{ trans.skill.user.username }}</p>
-                <span class="text-yellow-600 text-sm font-bold">Status: {{ trans.status }}</span>
+<div class="grid">
+  <div class="card">
+    <p class="muted" style="margin-bottom:0.35rem;">Available Credits</p>
+    <h1 id="stat-credits" style="margin-bottom:0;">--</h1>
+  </div>
+  <div class="card">
+    <p class="muted" style="margin-bottom:0.35rem;">My Offered Skills</p>
+    <h1 id="stat-skills" style="margin-bottom:0;">--</h1>
+  </div>
+  <div class="card">
+    <p class="muted" style="margin-bottom:0.35rem;">My Booked Sessions</p>
+    <h1 id="stat-bookings" style="margin-bottom:0;">--</h1>
+  </div>
+</div>
+
+<div class="card">
+  <h3>My Booked Sessions</h3>
+  <div id="my-bookings-list">
+    <p class="muted" style="margin-bottom:0;">Loading your bookings...</p>
+  </div>
+</div>
+
+<div class="card">
+  <h3>My Offered Skills</h3>
+  <div id="my-skills-list">
+    <p class="muted" style="margin-bottom:0;">Loading your skills...</p>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  async function loadDashboard() {
+    const me = getCurrentUser();
+    if (!me) {
+      document.getElementById("dash-welcome").textContent = "Not Logged In";
+      document.getElementById("dash-subtitle").innerHTML =
+        `Please <a href="/accounts/login/" style="color:#a5b4fc;">log in</a> or <a href="/register/" style="color:#a5b4fc;">sign up</a> to view your credits and bookings.`;
+      document.getElementById("my-bookings-list").innerHTML = `<p class="muted" style="margin-bottom:0;">Log in to see your sessions.</p>`;
+      document.getElementById("my-skills-list").innerHTML = `<p class="muted" style="margin-bottom:0;">Log in to see your skills.</p>`;
+      return;
+    }
+
+    document.getElementById("dash-welcome").textContent = `Welcome, @${me.username}`;
+    document.getElementById("stat-credits").textContent = me.study_credits ?? 0;
+
+    try {
+      const [skillsRes, bookingsRes] = await Promise.all([
+        apiRequest("/api/skills/"),
+        apiRequest(`/api/my-bookings/?user_id=${me.id}&username=${encodeURIComponent(me.username)}`),
+      ]);
+
+      const allSkills = Array.isArray(skillsRes) ? skillsRes : (skillsRes.results || []);
+      const mySkills = allSkills.filter(s => {
+        const owner = s.owner_username || s.user_username || (s.user && s.user.username);
+        return s.user === me.id || owner === me.username;
+      });
+
+      const bookings = Array.isArray(bookingsRes) ? bookingsRes : (bookingsRes.results || []);
+
+      document.getElementById("stat-skills").textContent = mySkills.length;
+      document.getElementById("stat-bookings").textContent = bookings.length;
+
+      const bookingsEl = document.getElementById("my-bookings-list");
+      if (!bookings.length) {
+        bookingsEl.innerHTML = `<p class="muted" style="margin-bottom:0;">No bookings yet. Head to the <a href="/marketplace/" style="color:#a5b4fc;">Marketplace</a> to book a session.</p>`;
+      } else {
+        bookingsEl.innerHTML = bookings.map(b => {
+          const skillName = b.skill_title || b.skill_name || (b.skill && b.skill.title) || `Skill #${b.skill || b.id}`;
+          const status = b.status || (b.is_confirmed ? "Confirmed" : "Pending");
+          return `
+            <div style="display:flex; justify-content:space-between; align-items:center; padding:0.75rem 0; border-bottom:1px solid var(--border); gap:1rem; flex-wrap:wrap;">
+              <div>
+                <strong>${skillName}</strong>
+                <div class="muted" style="font-size:0.85rem; margin-bottom:0;">Hours: ${b.hours || 1}</div>
+              </div>
+              <span class="badge">${status}</span>
             </div>
-            
-            <form method="POST" action="{% url 'toggle_booking' trans.skill.id %}">
-                {% csrf_token %}
-                <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">
-                    Cancel
-                </button>
-            </form>
-        </div>
-    {% empty %}
-        <p class="text-gray-500 text-center py-10">No sessions booked yet.</p>
-    {% endfor %}
-</div>
-    <h2 class="text-2xl font-semibold mt-10 mb-4">Your Skills</h2>
-    {% if skills %}
-        <ul class="space-y-4">
-            {% for skill in skills %}
-                <li class="border p-4 rounded">{{ skill.name }}</li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p class="text-gray-500">You haven't added any skills yet.</p>
-    {% endif %}
-</div>
+          `;
+        }).join("");
+      }
+
+      const skillsEl = document.getElementById("my-skills-list");
+      if (!mySkills.length) {
+        skillsEl.innerHTML = `<p class="muted" style="margin-bottom:0;">You haven't posted any skills yet. <a href="/add-skill/" style="color:#a5b4fc;">Add one now</a>.</p>`;
+      } else {
+        skillsEl.innerHTML = mySkills.map(s => `
+          <div style="display:flex; justify-content:space-between; align-items:center; padding:0.75rem 0; border-bottom:1px solid var(--border); gap:1rem; flex-wrap:wrap;">
+            <div>
+              <strong>${s.title || s.name}</strong>
+              <div class="muted" style="font-size:0.85rem; margin-bottom:0;">${s.description || ""}</div>
+            </div>
+            <span class="badge">${s.category || "Skill"}</span>
+          </div>
+        `).join("");
+      }
+    } catch (err) {
+      showMsg(err.message, true);
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", loadDashboard);
+</script>
 {% endblock %}

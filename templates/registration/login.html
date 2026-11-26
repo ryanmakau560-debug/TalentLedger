@@ -1,22 +1,49 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+{% block title %}Login | TalentLedger{% endblock %}
 
 {% block content %}
-<div class="max-w-md mx-auto mt-10 bg-white p-8 rounded-lg shadow-md">
-    <h2 class="text-2xl font-bold mb-6 text-center">Login to TalentLedger</h2>
-    
-    <form method="post">
-        {% csrf_token %}
-        <div class="mb-4">
-            {{ form.as_p }}
-        </div>
-        {% if form.non_field_errors %}
-    <div class="bg-red-100 text-red-700 p-3 rounded mb-4">
-        {{ form.non_field_errors }}
-    </div>
-{% endif %}
-        <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
-            Log In
-        </button>
-    </form>
+<div class="card" style="max-width: 440px; margin: 2.5rem auto;">
+  <h2>Welcome Back</h2>
+  <p class="muted">Log in to manage your skills, credits, and bookings.</p>
+
+  <form id="login-form">
+    <label for="username">Username</label>
+    <input id="username" type="text" required placeholder="e.g. demo_learner_01" />
+
+    <label for="password">Password</label>
+    <input id="password" type="password" required placeholder="••••••••" />
+
+    <button class="btn" type="submit" style="width: 100%;">Log In</button>
+  </form>
+
+  <p class="muted" style="margin-top: 1rem; margin-bottom: 0; font-size: 0.9rem;">
+    Don't have an account? <a href="/register/" style="color: #a5b4fc;">Sign up for 3 free credits</a>
+  </p>
 </div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  document.getElementById("login-form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const username = document.getElementById("username").value.trim();
+    const password = document.getElementById("password").value;
+
+    try {
+      const data = await apiRequest("/api/auth/login/", {
+        method: "POST",
+        body: JSON.stringify({ username, password }),
+      });
+
+      const user = data.user || data;
+      setCurrentUser(user);
+      showMsg(`Logged in as ${user.username}! Redirecting...`);
+      setTimeout(() => {
+        window.location.href = "/dashboard/";
+      }, 600);
+    } catch (err) {
+      showMsg(err.message, true);
+    }
+  });
+</script>
 {% endblock %}

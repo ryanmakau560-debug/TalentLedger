@@ -1,9 +1,65 @@
-{% extends 'pages/home.html' %} {% block content %}
-<h2>Share Your Skill</h2>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Submit Skill</button>
-</form>
-<a href="{% url 'home' %}">Back to Home</a>
+{% extends "base.html" %}
+{% block title %}Add Skill | TalentLedger{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 520px; margin: 1.5rem auto;">
+  <h2>Offer a Skill</h2>
+  <p class="muted">Share something you can teach others to earn study credits.</p>
+
+  <form id="add-skill-form">
+    <label for="title">Skill Title</label>
+    <input id="title" type="text" required placeholder="e.g. Python & Django REST APIs" />
+
+    <label for="category">Category</label>
+    <select id="category">
+      <option value="Programming">Programming</option>
+      <option value="Design">Design</option>
+      <option value="Languages">Languages</option>
+      <option value="Business">Business</option>
+      <option value="Other">Other</option>
+    </select>
+
+    <label for="description">Description</label>
+    <input id="description" type="text" required placeholder="What will the learner achieve in 1 session?" />
+
+    <button class="btn" type="submit" style="width: 100%;">Publish Skill</button>
+  </form>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  document.getElementById("add-skill-form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const me = getCurrentUser();
+    if (!me) {
+      showMsg("Please log in before adding a skill.", true);
+      return;
+    }
+
+    const title = document.getElementById("title").value.trim();
+    const category = document.getElementById("category").value;
+    const description = document.getElementById("description").value.trim();
+
+    try {
+      await apiRequest("/api/skills/", {
+        method: "POST",
+        body: JSON.stringify({
+          title,
+          name: title,
+          category,
+          description,
+          user: me.id,
+        }),
+      });
+
+      showMsg("Skill published to the Marketplace! Redirecting...");
+      setTimeout(() => {
+        window.location.href = "/marketplace/";
+      }, 600);
+    } catch (err) {
+      showMsg(err.message, true);
+    }
+  });
+</script>
 {% endblock %}
