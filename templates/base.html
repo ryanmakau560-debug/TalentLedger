@@ -108,6 +108,7 @@
       <a href="/contact/">Contact Us</a>
       <span id="nav-credits" class="badge">Credits: --</span>
       <span id="nav-user" style="color:#e2e8f0; font-size:0.9rem;"></span>
+      <a id="nav-signup" href="/accounts/register/">Sign Up</a>
       <a id="nav-login" href="/accounts/login/">Login</a>
       <button id="nav-logout" onclick="logoutUser()" style="display:none;">Logout</button>
     </div>
@@ -184,18 +185,21 @@
     function renderNavAuth() {
       const user = getCurrentUser();
       const userEl = document.getElementById("nav-user");
+      const signupEl = document.getElementById("nav-signup");
       const loginEl = document.getElementById("nav-login");
       const logoutEl = document.getElementById("nav-logout");
       const creditsEl = document.getElementById("nav-credits");
 
       if (user) {
         userEl.textContent = `@${user.username}`;
+        if (signupEl) signupEl.style.display = "none";
         loginEl.style.display = "none";
         logoutEl.style.display = "inline-block";
         creditsEl.textContent = `Credits: ${user.study_credits ?? 0}`;
         refreshUserCredits();
       } else {
         userEl.textContent = "";
+        if (signupEl) signupEl.style.display = "inline-block";
         loginEl.style.display = "inline-block";
         logoutEl.style.display = "none";
         creditsEl.textContent = "Credits: 0";
