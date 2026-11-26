@@ -1,32 +1,110 @@
 {% extends "base.html" %}
-{% block title %}TalentLedger | Peer Skill Exchange{% endblock %}
+{% block title %}TalentLedger | Time-Bank Skill Exchange{% endblock %}
 
 {% block content %}
-<div class="card" style="padding: 2.25rem;">
-  <span class="badge" style="display: inline-block; margin-bottom: 0.75rem;">Peer Skill Exchange</span>
-  <h1 style="font-size: 2.2rem;">TalentLedger</h1>
-  <p class="muted" style="font-size: 1.05rem; max-width: 680px;">
-    The decentralized marketplace where you trade skills, not just currency. Book sessions, earn credits, and grow.
-  </p>
-  <div style="display: flex; gap: 0.85rem; flex-wrap: wrap; margin-top: 1.25rem;">
-    <a class="btn" href="/skills/">Browse Skills</a>
-    <a class="btn" href="/subscription/" style="background: rgba(99, 102, 241, 0.2); border: 1px solid rgba(99, 102, 241, 0.5);">Upgrade Plan</a>
-    <a class="btn" href="/dashboard/" style="background: rgba(255, 255, 255, 0.08); border: 1px solid var(--border);">Dashboard</a>
+<!-- Top Hero + Side-by-Side Highlight Card -->
+<div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); align-items: stretch;">
+  <div class="card" style="margin-bottom: 0; display: flex; flex-direction: column; justify-content: space-between;">
+    <div>
+      <span class="badge" style="display: inline-block; margin-bottom: 0.85rem;">TIME-BANK SKILL EXCHANGE</span>
+      <h1 style="font-size: 2rem; line-height: 1.2;">Trade Knowledge Fairly. Track Every Hour.</h1>
+      <p class="muted" style="line-height: 1.65;">
+        TalentLedger is a peer-to-peer Time-Bank platform where learning and teaching are tracked with clear value.
+        Book live sessions over Discord, earn 1 Skill Credit for every hour taught, and redeem credits to learn new skills.
+      </p>
+    </div>
+    <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 0.5rem;">
+      <a class="btn" href="/marketplace/">Explore Marketplace</a>
+      <a class="btn" href="/about/">About Us</a>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom: 0; display: flex; flex-direction: column; justify-content: space-between;">
+    <div>
+      <span class="badge" style="display: inline-block; margin-bottom: 0.85rem;">HOW THE LEDGER WORKS</span>
+      <h2>1 Hour Taught = 1 Skill Credit</h2>
+      <p class="muted" style="line-height: 1.65;">
+        No awkward one-sided favors. Educators earn 1 Skill Credit per teaching hour, learners rate sessions for
+        accountability, and every booking and credit update stays recorded in one place.
+      </p>
+    </div>
+    <div style="margin-top: 0.75rem;">
+      <a class="btn btn-sm" href="/register/">Start Learning & Teaching</a>
+    </div>
   </div>
 </div>
 
+<!-- Side-by-Side Story & Explanation Section -->
+<div class="card" style="margin-top: 1.25rem;">
+  <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); align-items: center; margin-bottom: 0;">
+    <div>
+      <p class="muted" style="font-size: 0.85rem; letter-spacing: 0.06em; margin-bottom: 0.4rem;">WHO WE ARE</p>
+      <h2>Accountable Skill Exchange Built for Real Growth</h2>
+      <p class="muted" style="line-height: 1.7; margin-bottom: 0.85rem;">
+        Many skill-swap spaces lack structure—people trade tips informally, sessions get missed, and there is no
+        reliable way to measure what you contribute versus what you receive.
+      </p>
+      <p class="muted" style="line-height: 1.7; margin-bottom: 0;">
+        TalentLedger gives members a transparent Time-Bank system where live Discord mentoring pairs naturally with
+        verifiable session tracking and Skill Credits.
+      </p>
+    </div>
+
+    <div class="card" style="margin-bottom: 0; background: rgba(15, 23, 42, 0.75);">
+      <h3>Why Members Use TalentLedger</h3>
+      <p class="muted" style="line-height: 1.65; margin-bottom: 0.85rem;">
+        Whether you are teaching a coding concept, walking through design feedback, or booking help from someone else,
+        the workflow stays clear from start to finish:
+      </p>
+      <p class="muted" style="line-height: 1.65; margin-bottom: 0.5rem;">
+        <strong style="color: var(--text);">1. Request & Confirm:</strong> Learners send booking requests and instructors accept or decline them.
+      </p>
+      <p class="muted" style="line-height: 1.65; margin-bottom: 0.5rem;">
+        <strong style="color: var(--text);">2. Meet on Discord:</strong> Connect directly in live calls for hands-on guidance.
+      </p>
+      <p class="muted" style="line-height: 1.65; margin-bottom: 0;">
+        <strong style="color: var(--text);">3. Rate & Earn Credits:</strong> Learners rate the session and instructors earn Skill Credits.
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- Side-by-Side Deep Dive Cards -->
 <div class="grid">
-  <div class="card">
-    <h3>Skill Marketplace</h3>
-    <p class="muted" style="margin-bottom: 0;">Browse verified skill sessions from our community.</p>
+  <div class="card" style="margin-bottom: 0;">
+    <span class="badge" style="display: inline-block; margin-bottom: 0.75rem;">THE TIME-BANK IDEA</span>
+    <h2>Value Beyond Cash</h2>
+    <p class="muted" style="line-height: 1.65;">
+      Your time and expertise matter even when you are a student or building your portfolio. Teaching one person
+      builds credits you can spend learning from someone completely different across the platform.
+    </p>
+    <p class="muted" style="line-height: 1.65; margin-bottom: 0;">
+      Instead of keeping score in your head, the ledger keeps track of your bookings, hours, and credits cleanly.
+    </p>
   </div>
-  <div class="card">
-    <h3>Earn Credits</h3>
-    <p class="muted" style="margin-bottom: 0;">Share your expertise and earn credits for other lessons.</p>
+
+  <div class="card" style="margin-bottom: 0;">
+    <span class="badge" style="display: inline-block; margin-bottom: 0.75rem;">QUALITY & TRUST</span>
+    <h2>Ratings & Session Transparency</h2>
+    <p class="muted" style="line-height: 1.65;">
+      After a session wraps up, learners rate their experience so helpful instructors stand out and everyone knows
+      what to expect before booking.
+    </p>
+    <p class="muted" style="line-height: 1.65; margin-bottom: 0;">
+      Head to your dashboard or incoming requests anytime to check your active swaps, skills, and credit balance.
+    </p>
   </div>
-  <div class="card">
-    <h3>Secure Ledger</h3>
-    <p class="muted" style="margin-bottom: 0;">Track all your transactions transparently.</p>
+</div>
+
+<!-- Bottom Call-to-Action Strip -->
+<div class="card" style="margin-top: 1.25rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap;">
+  <div>
+    <h3 style="margin-bottom: 0.3rem;">Ready to share a skill or book a session?</h3>
+    <p class="muted" style="margin-bottom: 0;">Browse available skills, post what you can teach, or check your dashboard.</p>
+  </div>
+  <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+    <a class="btn" href="/add-skill/">Add a Skill</a>
+    <a class="btn" href="/dashboard/">Go to Dashboard</a>
   </div>
 </div>
 {% endblock %}

@@ -1,13 +1,107 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+{% block title %}Contact Us | TalentLedger{% endblock %}
+
 {% block content %}
-<div class="max-w-2xl mx-auto py-16 px-6">
-    <h1 class="text-4xl font-bold mb-6">Get in Touch</h1>
-    <p class="text-gray-600 mb-8">Have questions about the TalentLedger ecosystem? Reach out to our team.</p>
-    <form class="space-y-4">
-        <input type="text" placeholder="Your Name" class="w-full p-3 border rounded-lg">
-        <input type="email" placeholder="Your Email" class="w-full p-3 border rounded-lg">
-        <textarea placeholder="Message" class="w-full p-3 border rounded-lg h-32"></textarea>
-        <button class="bg-blue-600 text-white px-8 py-3 rounded-lg font-bold hover:bg-blue-700">Send Message</button>
+<!-- Top Header & Side-by-Side Contact + Channels -->
+<div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); align-items: start;">
+  <div class="card" style="margin-bottom: 0;">
+    <span class="badge" style="display: inline-block; margin-bottom: 0.75rem;">CONTACT US</span>
+    <h1>Get in Touch with TalentLedger</h1>
+    <p class="muted" style="line-height: 1.65;">
+      Have questions about how Skill Credits work, need help with a session booking, or want to share
+      feedback on TalentLedger? Send us a note below and we will point you in the right direction.
+    </p>
+
+    <form id="contact-form">
+      <label for="contact-name">Full Name</label>
+      <input id="contact-name" type="text" required value="Ryan Makau" placeholder="Your name" />
+
+      <label for="contact-email">Email Address</label>
+      <input id="contact-email" type="email" required placeholder="ryan@example.com" />
+
+      <label for="contact-topic">What is this about?</label>
+      <select id="contact-topic">
+        <option value="Skill Credits & Time-Bank">Skill Credits & Time-Bank Balance</option>
+        <option value="Discord Sessions & Bookings">Discord Sessions & Booking Requests</option>
+        <option value="Account & Login Support">Account, Login & Profile Help</option>
+        <option value="Platform Feedback & Ideas">Platform Feedback & Feature Ideas</option>
+      </select>
+
+      <label for="contact-message">Message</label>
+      <textarea
+        id="contact-message"
+        rows="4"
+        required
+        placeholder="Share details about your question, session, or suggestion..."
+        style="width: 100%; padding: 0.65rem 0.8rem; border-radius: 8px; border: 1px solid var(--border); background: rgba(15, 23, 42, 0.9); color: #fff; margin-bottom: 1rem; resize: vertical;"
+      ></textarea>
+
+      <button class="btn" type="submit" style="width: 100%;">Send Message</button>
     </form>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+    <div class="card" style="margin-bottom: 0;">
+      <span class="badge" style="display: inline-block; margin-bottom: 0.75rem;">DIRECT CHANNELS</span>
+      <h2>Connect with the Team</h2>
+      <p class="muted" style="line-height: 1.65;">
+        TalentLedger combines structured Time-Bank tracking with live peer sessions so learners and
+        educators can collaborate directly.
+      </p>
+
+      <div class="card" style="background: rgba(15, 23, 42, 0.75); margin-bottom: 0.85rem;">
+        <h3 style="margin-bottom: 0.35rem;">Creator & Maintainer</h3>
+        <p class="muted" style="margin-bottom: 0; line-height: 1.6;">
+          <strong style="color: var(--text);">Ryan Makau</strong> — Building and maintaining TalentLedger's
+          Time-Bank skill exchange experience.
+        </p>
+      </div>
+
+      <div class="card" style="background: rgba(15, 23, 42, 0.75); margin-bottom: 0.85rem;">
+        <h3 style="margin-bottom: 0.35rem;">Live Sessions on Discord</h3>
+        <p class="muted" style="margin-bottom: 0; line-height: 1.6;">
+          Mentoring, screen shares, and skill swaps happen over Discord calls once requests are confirmed.
+        </p>
+      </div>
+
+      <div class="card" style="background: rgba(15, 23, 42, 0.75); margin-bottom: 0;">
+        <h3 style="margin-bottom: 0.35rem;">Email Support</h3>
+        <p class="muted" style="margin-bottom: 0; line-height: 1.6;">
+          support@talentledger.app
+        </p>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom: 0;">
+      <span class="badge" style="display: inline-block; margin-bottom: 0.75rem;">QUICK ANSWERS</span>
+      <h3>Before You Send a Message</h3>
+      <p class="muted" style="line-height: 1.65; margin-bottom: 0.5rem;">
+        <strong style="color: var(--text);">Credits not showing?</strong> Check your top navigation badge or
+        open your <a href="/dashboard/" style="color: #a5b4fc;">Dashboard</a> after logging in.
+      </p>
+      <p class="muted" style="line-height: 1.65; margin-bottom: 0.85rem;">
+        <strong style="color: var(--text);">Pending learner bookings?</strong> Review and accept or decline them
+        on your <a href="/requests/" style="color: #a5b4fc;">Requests</a> page.
+      </p>
+      <div style="display: flex; gap: 0.65rem; flex-wrap: wrap;">
+        <a class="btn btn-sm" href="/">Home</a>
+        <a class="btn btn-sm" href="/about/">About Us</a>
+        <a class="btn btn-sm" href="/marketplace/">Marketplace</a>
+      </div>
+    </div>
+  </div>
 </div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  document.getElementById("contact-form").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const name = document.getElementById("contact-name").value.trim();
+    const topic = document.getElementById("contact-topic").value;
+    showMsg(`Thanks, ${name}! Your message about "${topic}" has been recorded.`);
+    e.target.reset();
+    document.getElementById("contact-name").value = name;
+  });
+</script>
 {% endblock %}
