@@ -210,6 +210,7 @@ def list_users(request):
             'username': u.username,
             'email': u.email,
             'study_credits': profile.study_credits,
+            'discord_username': profile.discord_username,
         })
     return JsonResponse({'users': users_data}, safe=False)
 
@@ -295,6 +296,7 @@ def simple_login(request):
                 "id": user.id,
                 "username": user.username,
                 "study_credits": profile.study_credits,
+                "discord_username": profile.discord_username,
             },
         },
         status=status.HTTP_200_OK,
@@ -305,6 +307,7 @@ def simple_login(request):
 def simple_signup(request):
     username = (request.data.get("username") or "").strip()
     password = request.data.get("password") or ""
+    discord_username = (request.data.get("discord_username") or "").strip()
 
     if not username or not password:
         return Response(
@@ -320,6 +323,9 @@ def simple_signup(request):
 
     user = User.objects.create_user(username=username, password=password)
     profile, _ = UserProfile.objects.get_or_create(user=user)
+    if discord_username:
+        profile.discord_username = discord_username
+        profile.save()
 
     return Response(
         {
@@ -328,6 +334,7 @@ def simple_signup(request):
                 "id": user.id,
                 "username": user.username,
                 "study_credits": profile.study_credits,
+                "discord_username": profile.discord_username,
             },
         },
         status=status.HTTP_201_CREATED,
