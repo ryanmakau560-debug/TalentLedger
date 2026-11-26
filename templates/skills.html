@@ -1,58 +1,56 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+{% block title %}Skills | TalentLedger{% endblock %}
 
 {% block content %}
-<div class="max-w-4xl mx-auto py-12 px-6">
-    <div class="flex justify-between items-center mb-8">
-        <h1 class="text-3xl font-bold">Available Skill Sessions</h1>
-        <a href="{% url 'add_skill' %}" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">
-            + Add Your Skill
-        </a>
-    </div>
-    
-    <div class="grid gap-6">
-        {% for skill in skills %}
-        <div class="border rounded-lg p-6 flex justify-between items-center shadow-sm hover:shadow-md transition">
-            <div>
-                <h2 class="text-xl font-bold">{{ skill.name }}</h2>
-                <p class="text-gray-600">Instructor: {{ skill.user.username }}</p>
-            </div>
-            
-            {% if skill.user != request.user %}
-                <button class="book-btn text-white px-4 py-2 rounded-lg" 
-                        data-id="{{ skill.id }}" 
-                        onclick="toggleBooking(this)"
-                        style="background-color: {% if skill.id in booked_skill_ids %}green{% else %}blue{% endif %};">
-                    {% if skill.id in booked_skill_ids %}Booked{% else %}Book Session{% endif %}
-                </button>
-            {% else %}
-                <span class="text-gray-400 italic text-sm">Your Listing</span>
-            {% endif %}
-        </div>
-        {% empty %}
-        <p class="text-gray-500 text-center py-10">No skills listed yet. Be the first to share!</p>
-        {% endfor %}
-    </div>
+<div class="card">
+  <h2>All Skills</h2>
+  <p class="muted">Explore skills shared by learners and instructors across TalentLedger.</p>
+  <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+    <a class="btn btn-sm" href="/marketplace/">Open Marketplace & Book</a>
+    <a class="btn btn-sm" href="/add-skill/">+ Offer a Skill</a>
+  </div>
 </div>
 
-<script>
-function toggleBooking(btn) {
-    const skillId = btn.getAttribute('data-id');
-    const csrfToken = document.cookie.split('; ').find(row => row.startsWith('csrftoken='))?.split('=')[1];
+<div id="all-skills-grid" class="grid">
+  <div class="card"><p class="muted" style="margin-bottom: 0;">Loading skills...</p></div>
+</div>
+{% endblock %}
 
-    fetch(`/toggle-booking/${skillId}/`, { 
-    method: 'POST',
-    headers: { 'X-CSRFToken': csrfToken, 'Content-Type': 'application/json' }
-})
-    .then(response => response.json())
-    .then(data => {
-        if (data.status === 'booked') {
-            btn.innerText = 'Booked';
-            btn.style.backgroundColor = 'green';
-        } else {
-            btn.innerText = 'Book Session';
-            btn.style.backgroundColor = 'blue';
-        }
-    });
-}
+{% block extra_scripts %}
+<script>
+  async function loadAllSkills() {
+    const grid = document.getElementById("all-skills-grid");
+    try {
+      const data = await apiRequest("/api/skills/");
+      const skills = Array.isArray(data) ? data : (data.results || []);
+
+      if (!skills.length) {
+        grid.innerHTML = `<div class="card"><p class="muted" style="margin-bottom: 0;">No skills available yet.</p></div>`;
+        return;
+      }
+
+      grid.innerHTML = skills.map(skill => {
+        const title = skill.title || skill.name || "Untitled Skill";
+        const ownerName = skill.owner_username || skill.user_username || (skill.user && skill.user.username) || `User #${skill.user || ""}`;
+        return `
+          <div class="card" style="display: flex; flex-direction: column; justify-content: space-between; margin-bottom: 0;">
+            <div>
+              <span class="badge" style="display: inline-block; margin-bottom: 0.75rem;">${skill.category || "Skill"}</span>
+              <h3>${title}</h3>
+              <p class="muted" style="font-size: 0.92rem;">${skill.description || "Peer learning session."}</p>
+            </div>
+            <div>
+              <p class="muted" style="font-size: 0.85rem; margin-bottom: 0.75rem;">Instructor: <strong>@${ownerName}</strong></p>
+              <a class="btn btn-sm" href="/marketplace/">Book in Marketplace</a>
+            </div>
+          </div>
+        `;
+      }).join("");
+    } catch (err) {
+      showMsg(err.message, true);
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", loadAllSkills);
 </script>
 {% endblock %}

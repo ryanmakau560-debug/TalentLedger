@@ -1,48 +1,56 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+{% block title %}Subscriptions | TalentLedger{% endblock %}
 
 {% block content %}
-<div class="max-w-6xl mx-auto py-12 px-6">
-    <h1 class="text-4xl font-bold text-center mb-12">Upgrade to Power User</h1>
-    
-    <div class="grid md:grid-cols-3 gap-8">
-        
-        <!-- Basic Tier -->
-        <div class="transition-transform duration-300 ease-in-out hover:scale-105 border rounded-lg p-8 shadow-lg text-center bg-white">
-            <h2 class="text-xl font-bold mb-4">Basic</h2>
-            <p class="text-4xl font-bold mb-6">$0</p>
-            <ul class="text-gray-600 mb-8 space-y-2">
-                <li>Standard Skill Matching</li>
-                <li>Ledger Access</li>
-                <li>1-on-1 Sessions</li>
-            </ul>
-        </div>
+<div class="card">
+  <span class="badge" style="display: inline-block; margin-bottom: 0.75rem;">Preview · Future Implementation</span>
+  <h2>Subscription Plans</h2>
+  <p class="muted" style="margin-bottom: 0;">
+    Paid plans are planned for a future release—<strong>TalentLedger is free right now</strong> so you can sign up, test skill swaps, and try out sessions at no cost.
+  </p>
+</div>
 
-        <!-- Power User Tier (Highlighted with hover scale) -->
-        <div class="transition-transform duration-300 ease-in-out hover:scale-105 border-4 border-blue-600 rounded-lg p-8 shadow-2xl text-center bg-blue-50">
-            <h2 class="text-2xl font-bold mb-4 text-blue-800">Power User</h2>
-            <p class="text-4xl font-bold mb-6">$9.99</p>
-            <ul class="text-gray-700 mb-8 space-y-2 font-semibold">
-                <li>Verified Badges</li>
-                <li>Advanced Search Filters</li>
-                <li>Host Group Sessions</li>
-            </ul>
-            <!-- Inside the 'Power User' card -->
-<a href="{% url 'payment' tier='PowerUser' %}" class="block bg-blue-600 text-white px-6 py-2 rounded-full mt-4">
-    Get Started
-</a>
-        </div>
-
-        <!-- Enterprise Tier -->
-        <div class="transition-transform duration-300 ease-in-out hover:scale-105 border rounded-lg p-8 shadow-lg text-center bg-white">
-            <h2 class="text-xl font-bold mb-4">Enterprise</h2>
-            <p class="text-4xl font-bold mb-6">$49</p>
-            <ul class="text-gray-600 mb-8 space-y-2">
-                <li>Everything in Power</li>
-                <li>API Access</li>
-                <li>Dedicated Support</li>
-            </ul>
-        </div>
-
+<div class="grid">
+  <div class="card" style="display: flex; flex-direction: column; justify-content: space-between; margin-bottom: 0;">
+    <div>
+      <span class="badge" style="display: inline-block; margin-bottom: 0.75rem;">Basic</span>
+      <h2>$5 <span class="muted" style="font-size: 0.95rem; font-weight: 400;">/ month</span></h2>
+      <p class="muted">Standard platform access for everyday skill trading.</p>
+      <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1.25rem; color: #cbd5e1; font-size: 0.92rem;">
+        <li>• Normal platform & marketplace use</li>
+        <li>• Standard 1-hour study sessions</li>
+        <li>• Preview tier (free during trial)</li>
+      </ul>
     </div>
+    <a class="btn btn-sm" href="/marketplace/" style="text-align: center;">Try Free Now</a>
+  </div>
+
+  <div class="card" style="display: flex; flex-direction: column; justify-content: space-between; margin-bottom: 0; border-color: rgba(99, 102, 241, 0.5);">
+    <div>
+      <span class="badge" style="display: inline-block; margin-bottom: 0.75rem;">Pro</span>
+      <h2>$10 <span class="muted" style="font-size: 0.95rem; font-weight: 400;">/ month</span></h2>
+      <p class="muted">Extra credit boost for active learners and swappers.</p>
+      <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1.25rem; color: #cbd5e1; font-size: 0.92rem;">
+        <li>• <strong>3 free study credits</strong> included</li>
+        <li>• Everything in Basic</li>
+        <li>• Planned feature (free to try now)</li>
+      </ul>
+    </div>
+    <a class="btn btn-sm" href="/register/" style="text-align: center;">Start Free Trial</a>
+  </div>
+
+  <div class="card" style="display: flex; flex-direction: column; justify-content: space-between; margin-bottom: 0;">
+    <div>
+      <span class="badge" style="display: inline-block; margin-bottom: 0.75rem;">Premium</span>
+      <h2>$20 <span class="muted" style="font-size: 0.95rem; font-weight: 400;">/ month</span></h2>
+      <p class="muted">Built for deep study blocks and more credits.</p>
+      <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1.25rem; color: #cbd5e1; font-size: 0.92rem;">
+        <li>• <strong>6 free study credits</strong> included</li>
+        <li>• <strong>Multi-hour study sessions</strong> (beyond 1 hour)</li>
+        <li>• Planned feature (free to try now)</li>
+      </ul>
+    </div>
+    <a class="btn btn-sm" href="/dashboard/" style="text-align: center;">Explore Dashboard</a>
+  </div>
 </div>
 {% endblock %}

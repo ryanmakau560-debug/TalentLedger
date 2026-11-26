@@ -1,28 +1,39 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+{% block title %}Profile | TalentLedger{% endblock %}
+
 {% block content %}
-<div class="max-w-4xl mx-auto py-12 px-6">
-    <div class="bg-white p-8 rounded-xl shadow-lg border mb-8">
-        <h1 class="text-3xl font-bold text-gray-800">{{ request.user.username }}'s Profile</h1>
-        <p class="text-gray-600 mt-2">Member since {{ request.user.date_joined|date:"F Y" }}</p>
-    </div>
+<div class="card" style="max-width: 600px; margin: 1.5rem auto;">
+  <h2>Your Profile</h2>
+  <p class="muted">Account details and study credit balance.</p>
 
-    <h2 class="text-2xl font-bold mb-6">Skills You Are Offering</h2>
-    <div class="grid gap-4">
-        {% for skill in user_skills %}
-        <div class="bg-white p-6 rounded-lg border flex justify-between items-center shadow-sm">
-            <div>
-                <h3 class="font-bold text-lg">{{ skill.name }}</h3>
-                <span class="text-sm text-gray-500">{{ skill.credits }} Credits per session</span>
-            </div>
-            <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-bold">Active</span>
-        </div>
-        {% empty %}
-        <p class="text-gray-500 italic">You haven't listed any skills yet.</p>
-        {% endfor %}
-    </div>
+  <div id="profile-details">
+    <p class="muted" style="margin-bottom: 0;">Loading profile...</p>
+  </div>
 
-    <div class="mt-8">
-        <a href="{% url 'add_skill' %}" class="bg-blue-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-blue-700">Add New Skill</a>
-    </div>
+  <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 1.25rem;">
+    <a class="btn btn-sm" href="/dashboard/">Dashboard</a>
+    <a class="btn btn-sm" href="/add-skill/">Add Skill</a>
+    <a class="btn btn-sm" href="/marketplace/">Marketplace</a>
+  </div>
 </div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const me = getCurrentUser();
+    const box = document.getElementById("profile-details");
+
+    if (!me) {
+      box.innerHTML = `<p class="muted" style="margin-bottom: 0;">You are not logged in. <a href="/accounts/login/" style="color: #a5b4fc;">Log in here</a>.</p>`;
+      return;
+    }
+
+    box.innerHTML = `
+      <p style="margin-bottom: 0.6rem;"><strong>Username:</strong> @${me.username}</p>
+      <p style="margin-bottom: 0.6rem;"><strong>Email:</strong> ${me.email || "Not set"}</p>
+      <p style="margin-bottom: 0;"><strong>Study Credits:</strong> <span class="badge">${me.study_credits ?? 0} Credits</span></p>
+    `;
+  });
+</script>
 {% endblock %}

@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}TalentLedger | Skill Swap Marketplace{% endblock %}
+
+{% block content %}
+<div class="card" style="padding: 2.25rem;">
+  <h1 style="font-size: 2.2rem;">TalentLedger</h1>
+  <p class="muted" style="font-size: 1.05rem; max-width: 680px;">
+    The decentralized marketplace where you trade skills, not just currency. Book sessions, earn credits, and grow.
+  </p>
+  <div style="display: flex; gap: 0.85rem; flex-wrap: wrap; margin-top: 1.25rem;">
+    <a class="btn" href="/marketplace/">Browse Skills</a>
+    <a class="btn" href="/add-skill/" style="background: rgba(99, 102, 241, 0.2); border: 1px solid rgba(99, 102, 241, 0.5);">Offer a Skill</a>
+    <a class="btn" href="/dashboard/" style="background: rgba(255, 255, 255, 0.08); border: 1px solid var(--border);">Go to Dashboard</a>
+  </div>
+</div>
+
+<div class="grid">
+  <div class="card">
+    <h3>Skill Marketplace</h3>
+    <p class="muted" style="margin-bottom: 0;">Browse verified skill sessions from our community.</p>
+  </div>
+  <div class="card">
+    <h3>Earn Credits</h3>
+    <p class="muted" style="margin-bottom: 0;">Share your expertise and earn credits for other lessons.</p>
+  </div>
+  <div class="card">
+    <h3>Secure Ledger</h3>
+    <p class="muted" style="margin-bottom: 0;">Track all your transactions transparently.</p>
+  </div>
+</div>
+{% endblock %}
