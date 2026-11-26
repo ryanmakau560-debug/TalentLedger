@@ -1,17 +1,17 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+{% block title %}Payment & Plans | TalentLedger{% endblock %}
 
 {% block content %}
-<div class="max-w-md mx-auto py-12 px-6">
-    <h1 class="text-3xl font-bold mb-6">Complete your {{ tier }} subscription</h1>
-    <form class="space-y-4">
-        <input type="text" placeholder="Card Number" class="w-full p-3 border rounded">
-        <div class="flex gap-4">
-            <input type="text" placeholder="MM/YY" class="w-1/2 p-3 border rounded">
-            <input type="text" placeholder="CVC" class="w-1/2 p-3 border rounded">
-        </div>
-        <button class="w-full bg-blue-600 text-white py-3 rounded-lg font-bold">
-            Pay Now
-        </button>
-    </form>
+<div class="card" style="max-width: 560px; margin: 1.5rem auto;">
+  <span class="badge" style="display: inline-block; margin-bottom: 0.75rem;">Free During Preview</span>
+  <h2>Credits & Subscriptions</h2>
+  <p class="muted">
+    Payments are not active yet—TalentLedger is free to try out right now. View our planned Basic ($5/mo), Pro ($10/mo), and Premium ($20/mo) tiers on the Subscriptions page.
+  </p>
+  <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+    <a class="btn" href="/subscription/">View Subscription Plans</a>
+    <a class="btn" href="/marketplace/" style="background: rgba(99, 102, 241, 0.2); border: 1px solid rgba(99, 102, 241, 0.5);">Browse Marketplace</a>
+    <a class="btn" href="/dashboard/" style="background: rgba(255, 255, 255, 0.08); border: 1px solid var(--border);">Back to Dashboard</a>
+  </div>
 </div>
 {% endblock %}
