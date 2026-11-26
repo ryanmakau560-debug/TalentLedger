@@ -1,4 +1,3 @@
-from django.contrib import messages
 from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -16,7 +15,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from .forms import CustomUserCreationForm, SkillForm
-from .models import Session, Skill, Transaction, UserProfile
+from .models import Skill, Transaction, UserProfile
 from .serializers import SkillSerializer
 
 
@@ -73,16 +72,7 @@ def add_skill_view(request):
     return render(request, 'add_skill.html', {'form': form})
 
 
-@csrf_exempt
-def add_skill(request):
-    if request.method == 'POST':
-        form = SkillForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('home')
-    else:
-        form = SkillForm()
-    return render(request, 'add_skill.html', {'form': form})
+add_skill = add_skill_view
 
 
 @login_required
@@ -99,20 +89,17 @@ def profile_view(request):
     return render(request, 'profile.html', {'user_skills': user_skills})
 
 
-@csrf_exempt
-def dashboard(request):
-    user_swaps = Transaction.objects.filter(sender=request.user) if request.user.is_authenticated else Transaction.objects.none()
-    return render(request, 'dashboard.html', {'swaps': user_swaps})
-
-
-@csrf_exempt
 def dashboard_view(request):
     user_skills = Skill.objects.filter(user=request.user) if request.user.is_authenticated else Skill.objects.none()
     my_transactions = Transaction.objects.filter(sender=request.user) if request.user.is_authenticated else Transaction.objects.none()
     return render(request, 'dashboard.html', {
         'my_transactions': my_transactions,
+        'swaps': my_transactions,
         'skills': user_skills,
     })
+
+
+dashboard = dashboard_view
 
 
 @login_required
@@ -123,7 +110,7 @@ def received_requests_view(request):
     )
     return render(request, 'received_requests.html', {'requests': requests})
 
-@method_decorator(csrf_exempt, name='dispatch')
+
 def register_view(request):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
@@ -135,7 +122,6 @@ def register_view(request):
     return render(request, 'register.html', {'form': form})
 
 
-@method_decorator(csrf_exempt, name='dispatch')
 class MyLoginView(LoginView):
     pass
 
@@ -147,8 +133,8 @@ def get_user_credits(user):
     return sum(skill.credits for skill in user_skills)
 
 
+@login_required
 @require_POST
-@csrf_exempt
 def toggle_book_session(request, skill_id):
     skill = get_object_or_404(Skill, id=skill_id)
     existing = Transaction.objects.filter(sender=request.user, skill=skill).first()
@@ -167,8 +153,8 @@ def toggle_book_session(request, skill_id):
     return redirect('dashboard')
 
 
+@login_required
 @require_POST
-@csrf_exempt
 def update_transaction_status(request, transaction_id, action):
     tx = get_object_or_404(Transaction, id=transaction_id)
     if action == 'accept':
@@ -179,6 +165,7 @@ def update_transaction_status(request, transaction_id, action):
     return redirect('dashboard')
 
 
+@login_required
 def request_swap(request, skill_id):
     skill = get_object_or_404(Skill, id=skill_id)
     if request.method == 'POST':
@@ -216,7 +203,6 @@ def _serialize_transaction(tx):
 
 # --- API Views ---
 
-@csrf_exempt
 def list_users(request):
     users_data = []
     for u in User.objects.all():
@@ -231,7 +217,6 @@ def list_users(request):
 
 
 @api_view(['GET', 'POST'])
-@csrf_exempt
 def skill_api_list(request):
     if request.method == 'GET':
         category = request.query_params.get('category', None)
@@ -246,7 +231,6 @@ def skill_api_list(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@csrf_exempt
 @api_view(['PUT', 'DELETE'])
 def skill_detail(request, pk):
     skill = get_object_or_404(Skill, pk=pk)
@@ -262,7 +246,6 @@ def skill_detail(request, pk):
     return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-@csrf_exempt
 @api_view(["POST"])
 def set_user_password(request):
     username = request.data.get("username")
@@ -352,7 +335,6 @@ def simple_signup(request):
     )
 
 
-@csrf_exempt
 @api_view(['POST'])
 def api_book_skill(request, skill_id):
     skill = get_object_or_404(Skill, id=skill_id)
@@ -414,7 +396,6 @@ def api_instructor_requests(request):
     return Response([_serialize_transaction(tx) for tx in qs], status=drf_status.HTTP_200_OK)
 
 
-@csrf_exempt
 @api_view(['POST', 'PATCH', 'PUT'])
 def api_respond_booking(request, transaction_id):
     tx = get_object_or_404(Transaction, id=transaction_id)
