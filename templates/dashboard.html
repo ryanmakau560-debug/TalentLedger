@@ -109,7 +109,10 @@
               <strong>${s.title || s.name}</strong>
               <div class="muted" style="font-size:0.85rem; margin-bottom:0;">${s.description || ""}</div>
             </div>
-            <span class="badge">${s.category || "Skill"}</span>
+            <div style="display:flex; align-items:center; gap:0.5rem;">
+              <span class="badge">${s.category || "Skill"}</span>
+              <button class="btn btn-sm" style="background: var(--danger);" onclick="deleteSkill(${s.id})">Delete</button>
+            </div>
           </div>
         `).join("");
       }
@@ -125,6 +128,19 @@
       });
       showMsg("Session completed and credit awarded to the instructor!");
       await refreshUserCredits();
+      loadDashboard();
+    } catch (err) {
+      showMsg(err.message, true);
+    }
+  }
+
+  async function deleteSkill(skillId) {
+    if (!confirm("Are you sure you want to delete this skill?")) return;
+    try {
+      await apiRequest(`/api/skills/${skillId}/`, {
+        method: "DELETE",
+      });
+      showMsg("Skill deleted.");
       loadDashboard();
     } catch (err) {
       showMsg(err.message, true);
