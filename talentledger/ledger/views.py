@@ -115,10 +115,13 @@ def dashboard_view(request):
     })
 
 
+@login_required
 def received_requests_view(request):
-    requests = Transaction.objects.filter(skill__instructor=request.user, status='pending')
+    requests = Transaction.objects.filter(
+        skill__instructor=request.user,
+        status__iexact='pending'
+    )
     return render(request, 'received_requests.html', {'requests': requests})
-
 
 @method_decorator(csrf_exempt, name='dispatch')
 def register_view(request):
