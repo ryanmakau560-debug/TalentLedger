@@ -23,7 +23,7 @@ class Session(models.Model):
     
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
-    study_credits = models.PositiveIntegerField(default=0)
+    study_credits = models.PositiveIntegerField(default=3)
 
     def __str__(self):
         return f"{self.user.username} ({self.study_credits} credits)"
@@ -36,6 +36,7 @@ class Transaction(models.Model):
     hours = models.PositiveIntegerField()
     status = models.CharField(max_length=20, default='Pending')
     scheduled_time = models.DateTimeField(null=True, blank=True)
+    credit_awarded = models.BooleanField(default=False)
     timestamp = models.DateTimeField(auto_now_add=True)
     credit_awarded = models.BooleanField(default=False)
 
