@@ -1,0 +1,54 @@
+{
+    "project": "TalentLedger",
+    "version": "1.0.0",
+    "endpoints": [
+        {
+            "name": "Home",
+            "method": "GET",
+            "path": "/",
+            "description": "Displays the home page"
+        },
+        {
+            "name": "Dashboard",
+            "method": "GET",
+            "path": "/dashboard/",
+            "description": "Displays user booked sessions and skills"
+        },
+        {
+            "name": "Register",
+            "method": "POST",
+            "path": "/register/",
+            "description": "Registers a new user account"
+        },
+        {
+            "name": "Login",
+            "method": "POST",
+            "path": "/accounts/login/",
+            "description": "Logs in a user"
+        },
+        {
+            "name": "Add Skill",
+            "method": "POST",
+            "path": "/add-skill/",
+            "description": "Adds a new skill to the user's profile"
+        },
+        {
+            "name": "Delete Skill",
+            "method": "POST",
+            "path": "/delete-skill/<int:skill_id>/",
+            "description": "Removes a specific skill"
+        },
+        {
+            "name": "Book Session",
+            "method": "POST",
+            "path": "/book-session/<int:skill_id>/",
+            "description": "Books a session for a specific skill"
+        },
+        {
+            "name": "Skill API",
+            "method": "GET",
+            "path": "/api/skills/",
+            "description": "Returns a list of skills in JSON format"
+        }
+    ]
+}
