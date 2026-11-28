@@ -9,6 +9,7 @@ from django.utils.dateparse import parse_datetime
 from django.views.decorators.http import require_POST
 from rest_framework import status
 from rest_framework import status as drf_status
+from rest_framework.authtoken.models import Token
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
@@ -288,10 +289,12 @@ def simple_login(request):
 
     login(request, user)
     profile, _ = UserProfile.objects.get_or_create(user=user)
+    token, _ = Token.objects.get_or_create(user=user)
 
     return Response(
         {
             "message": "Logged in successfully.",
+            "token": token.key,
             "user": {
                 "id": user.id,
                 "username": user.username,
@@ -326,10 +329,12 @@ def simple_signup(request):
     if discord_username:
         profile.discord_username = discord_username
         profile.save()
+    token, _ = Token.objects.get_or_create(user=user)
 
     return Response(
         {
             "message": "Account created successfully.",
+            "token": token.key,
             "user": {
                 "id": user.id,
                 "username": user.username,
